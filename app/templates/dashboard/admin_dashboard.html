@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}
+Admin Dashboard
+{% endblock %}
+
+{% block content %}
+
+<h1>Admin Dashboard</h1>
+
+<hr>
+
+<h3>Welcome, {{ current_user.name }}!</h3>
+
+<p>
+Email: {{ current_user.email }}
+</p>
+
+<hr>
+
+<h2>Administration</h2>
+
+<ul>
+
+    <li>
+
+        <a href="{{ url_for('admin.categories') }}">
+            Category Management
+        </a>
+
+    </li>
+
+    <br>
+
+    <li>
+
+        <a href="{{ url_for('admin.quizzes') }}">
+            Quiz Management
+        </a>
+
+    </li>
+
+</ul>
+
+{% endblock %}

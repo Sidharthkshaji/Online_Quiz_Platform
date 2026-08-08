@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create Question
+{% endblock %}
+
+{% block content %}
+
+<h1>Add Question - {{ quiz.title }}</h1>
+
+<form method="POST">
+
+    {{ form.hidden_tag() }}
+
+    <div class="form-group">
+        {{ form.question_text.label }}
+        {{ form.question_text(rows=4) }}
+    </div>
+
+    <div class="form-group">
+        {{ form.marks.label }}
+        {{ form.marks() }}
+    </div>
+
+    <hr>
+
+    <h3>Choices</h3>
+
+    <div class="choice-container">
+
+        {% for subfield in form.correct_choice %}
+
+        <div class="choice-row">
+
+            <div class="choice-radio">
+                {{ subfield }}
+            </div>
+
+            <div class="choice-input">
+
+                {% if loop.index == 1 %}
+                    {{ form.choice_a() }}
+                {% elif loop.index == 2 %}
+                    {{ form.choice_b() }}
+                {% elif loop.index == 3 %}
+                    {{ form.choice_c() }}
+                {% elif loop.index == 4 %}
+                    {{ form.choice_d() }}
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <br>
+
+    {{ form.submit() }}
+
+</form>
+
+<br>
+
+<a href="{{ url_for('admin.questions', quiz_id=quiz.id) }}">
+    Back
+</a>
+
+{% endblock %}

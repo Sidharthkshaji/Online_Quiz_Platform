@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Online Quiz Platform{% endblock %}</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<nav>
+
+    <a href="{{ url_for('main.home') }}"
+       class="{% if request.endpoint == 'main.home' %}active{% endif %}">
+        Home
+    </a>
+
+    {% if current_user.is_authenticated %}
+
+        <a href="{{ url_for('main.dashboard') }}"
+            class="{% if request.endpoint == 'main.dashboard' %}active{% endif %}">
+                Dashboard 
+        </a>
+
+        {% if current_user.is_admin %}
+
+            <a href="{{ url_for('admin.categories') }}"
+               class="{% if request.endpoint in ['admin.categories', 'admin.create_category_route', 'admin.edit_category'] %}active{% endif %}">
+                Categories
+            </a>
+
+            <a href="{{ url_for('admin.quizzes') }}"
+               class="{% if request.endpoint in ['admin.quizzes', 'admin.create_quiz_route', 'admin.edit_quiz', 'admin.questions', 'admin.create_question_route', 'admin.edit_question'] %}active{% endif %}">
+                Quizzes
+            </a>
+
+        {% endif %}
+
+        <a href="{{ url_for('auth.logout') }}">
+            Logout
+        </a>
+
+    {% else %}
+
+        <a href="{{ url_for('auth.login') }}"
+           class="{% if request.endpoint == 'auth.login' %}active{% endif %}">
+            Login
+        </a>
+
+        <a href="{{ url_for('auth.register') }}"
+           class="{% if request.endpoint == 'auth.register' %}active{% endif %}">
+            Register
+        </a>
+
+    {% endif %}
+
+</nav>
+
+<div class="container">
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        {% for category,message in messages %}
+
+            <p class="{{ category }}">
+                {{ message }}
+            </p>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+{% block content %}
+
+{% endblock %}
+
+</div>
+
+</body>
+
+</html>
