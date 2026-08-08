@@ -1,7 +1,7 @@
-from Online_Quiz_Platform.app.extensions import db
-from Online_Quiz_Platform.app.models.question import Question
-from Online_Quiz_Platform.app.models.choice import Choice
-from Online_Quiz_Platform.app.models.quiz import Quiz
+from app.extensions import db
+from app.models.question import Question
+from app.models.choice import Choice
+from app.models.quiz import Quiz
 
 
 def get_questions_by_quiz(quiz_id):

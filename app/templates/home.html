@@ -1,20 +1,185 @@
 {% extends "base.html" %}
 
 {% block title %}
-
 Home
-
 {% endblock %}
-
 
 {% block content %}
 
-<h1>Welcome to Online Quiz Platform</h1>
+<section class="hero">
 
-<p>
+    <div class="hero-content">
 
-This is the Home Page.
+        <span class="hero-badge">
+            ONLINE QUIZ PLATFORM
+        </span>
 
-</p>
+        <h1>
+            Test Your Knowledge.<br>
+            Improve Your Skills.
+        </h1>
+
+        <p>
+            Practice with interactive quizzes, track your performance,
+            and review your mistakes to become better every day.
+        </p>
+
+        <div class="hero-buttons">
+
+            {% if current_user.is_authenticated %}
+
+                <a href="{{ url_for('main.dashboard') }}"
+                   class="btn btn-primary">
+                    Go to Dashboard
+                </a>
+
+            {% else %}
+
+                <a href="{{ url_for('auth.register') }}"
+                   class="btn btn-primary">
+                    Get Started
+                </a>
+
+                <a href="{{ url_for('auth.login') }}"
+                   class="btn btn-secondary">
+                    Login
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="features-section">
+
+    <div class="section-heading">
+
+        <span>LEARN • PRACTICE • IMPROVE</span>
+
+        <h2>
+            Everything You Need to Test Yourself
+        </h2>
+
+        <p>
+            A simple platform to practice quizzes and understand
+            your performance.
+        </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                📝
+            </div>
+
+            <h3>
+                Take Quizzes
+            </h3>
+
+            <p>
+                Choose from available quizzes and test your
+                knowledge with multiple-choice questions.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                📊
+            </div>
+
+            <h3>
+                Track Performance
+            </h3>
+
+            <p>
+                View your scores and percentages after completing
+                your quizzes.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🎯
+            </div>
+
+            <h3>
+                Review Mistakes
+            </h3>
+
+            <p>
+                Review your answers and see the correct answers
+                for questions you got wrong.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🔄
+            </div>
+
+            <h3>
+                Learn From Practice
+            </h3>
+
+            <p>
+                Revisit quizzes and use your results to identify
+                areas where you can improve.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="cta-section">
+
+    <div>
+
+        <h2>
+            Ready to test yourself?
+        </h2>
+
+        <p>
+            Start your quiz journey today.
+        </p>
+
+    </div>
+
+    {% if not current_user.is_authenticated %}
+
+        <a href="{{ url_for('auth.register') }}"
+           class="btn btn-primary">
+            Create Account
+        </a>
+
+    {% else %}
+
+        <a href="{{ url_for('main.dashboard') }}"
+           class="btn btn-primary">
+            Open Dashboard
+        </a>
+
+    {% endif %}
+
+</section>
 
 {% endblock %}

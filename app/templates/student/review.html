@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}
+Review Answers
+{% endblock %}
+
+{% block content %}
+
+<h1>Review Answers</h1>
+
+<p>
+    <strong>Score:</strong>
+    {{ attempt.score }}
+</p>
+
+<p>
+    <strong>Percentage:</strong>
+    {{ "%.2f"|format(attempt.percentage) }}%
+</p>
+
+<hr>
+
+{% for response in attempt.responses %}
+
+    <h3>
+        Question {{ loop.index }}
+    </h3>
+
+    <p>
+        <strong>{{ response.question.question_text }}</strong>
+    </p>
+
+    <p>
+        <strong>Your Answer:</strong>
+        {{ response.selected_choice.choice_text }}
+    </p>
+
+    {% if response.selected_choice.is_correct %}
+
+        <p>
+            ✅ <strong>Correct</strong>
+        </p>
+
+    {% else %}
+
+        <p>
+            ❌ <strong>Wrong</strong>
+        </p>
+
+        <p>
+            <strong>Correct Answer:</strong>
+
+            {% for choice in response.question.choices %}
+
+                {% if choice.is_correct %}
+                    {{ choice.choice_text }}
+                {% endif %}
+
+            {% endfor %}
+        </p>
+
+    {% endif %}
+
+    <hr>
+
+{% endfor %}
+
+<a href="{{ url_for('student.quizzes') }}">
+    Back to Available Quizzes
+</a>
+
+{% endblock %}

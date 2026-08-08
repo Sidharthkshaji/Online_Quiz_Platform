@@ -23,38 +23,51 @@
 
     {% if current_user.is_authenticated %}
 
-        <a href="{{ url_for('main.dashboard') }}"
+        {% if quiz_active|default(false) %}
+
+            <span class="quiz-mode-indicator">
+                Quiz in Progress
+            </span>
+
+        {% else %}
+
+            <a href="{{ url_for('main.dashboard') }}"
             class="{% if request.endpoint == 'main.dashboard' %}active{% endif %}">
-                Dashboard 
-        </a>
-
-        {% if current_user.is_admin %}
-
-            <a href="{{ url_for('admin.categories') }}"
-               class="{% if request.endpoint in ['admin.categories', 'admin.create_category_route', 'admin.edit_category'] %}active{% endif %}">
-                Categories
+                Dashboard
             </a>
 
-            <a href="{{ url_for('admin.quizzes') }}"
-               class="{% if request.endpoint in ['admin.quizzes', 'admin.create_quiz_route', 'admin.edit_quiz', 'admin.questions', 'admin.create_question_route', 'admin.edit_question'] %}active{% endif %}">
-                Quizzes
+            {% if current_user.is_admin %}
+
+                <a href="{{ url_for('admin.categories') }}">
+                    Categories
+                </a>
+
+                <a href="{{ url_for('admin.quizzes') }}">
+                    Quizzes
+                </a>
+
+            {% else %}
+
+                <a href="{{ url_for('student.quizzes') }}"
+                class="{% if request.endpoint == 'student.quizzes' %}active{% endif %}">
+                    Quizzes
+                </a>
+
+            {% endif %}
+
+            <a href="{{ url_for('auth.logout') }}">
+                Logout
             </a>
 
         {% endif %}
 
-        <a href="{{ url_for('auth.logout') }}">
-            Logout
-        </a>
-
     {% else %}
 
-        <a href="{{ url_for('auth.login') }}"
-           class="{% if request.endpoint == 'auth.login' %}active{% endif %}">
+        <a href="{{ url_for('auth.login') }}">
             Login
         </a>
 
-        <a href="{{ url_for('auth.register') }}"
-           class="{% if request.endpoint == 'auth.register' %}active{% endif %}">
+        <a href="{{ url_for('auth.register') }}">
             Register
         </a>
 

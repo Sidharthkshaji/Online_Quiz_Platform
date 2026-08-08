@@ -1,22 +1,22 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
 
-from Online_Quiz_Platform.app.models.category import Category
-from Online_Quiz_Platform.app.forms.category_form import CategoryForm
-from Online_Quiz_Platform.app.services.category_service import (
+from app.models.category import Category
+from app.forms.category_form import CategoryForm
+from app.services.category_service import (
     get_all_categories,
     create_category,
     update_category,
     delete_category
 )
 
-from Online_Quiz_Platform.app.forms.quiz_form import QuizForm
-from Online_Quiz_Platform.app.forms.question_form import QuestionForm
-from Online_Quiz_Platform.app.models.quiz import Quiz
-from Online_Quiz_Platform.app.models.question import Question
+from app.forms.quiz_form import QuizForm
+from app.forms.question_form import QuestionForm
+from app.models.quiz import Quiz
+from app.models.question import Question
 
 
-from Online_Quiz_Platform.app.services.quiz_service import (
+from app.services.quiz_service import (
     get_all_quizzes,
     get_quiz_by_id,
     get_category_choices,
@@ -25,7 +25,7 @@ from Online_Quiz_Platform.app.services.quiz_service import (
     delete_quiz
 )
 
-from Online_Quiz_Platform.app.services.question_service import (
+from app.services.question_service import (
     get_questions_by_quiz,
     get_question_by_id,
     create_question,
@@ -390,4 +390,20 @@ def delete_question_route(question_id):
             "admin.questions",
             quiz_id=quiz_id
         )
+    )
+
+
+@admin.route("/quizzes/<int:quiz_id>/view")
+@login_required
+def view_quiz(quiz_id):
+
+    if not current_user.is_admin:
+        flash("You are not authorized.", "danger")
+        return redirect(url_for("main.dashboard"))
+
+    quiz = get_quiz_by_id(quiz_id)
+
+    return render_template(
+        "admin/view_quiz.html",
+        quiz=quiz
     )

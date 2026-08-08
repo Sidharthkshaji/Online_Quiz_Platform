@@ -1,4 +1,4 @@
-from Online_Quiz_Platform.app.extensions import db
+from app.extensions import db
 
 
 class Choice(db.Model):

@@ -10,51 +10,61 @@ Available Quizzes
 
 {% if quizzes %}
 
-<table>
-
-    <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Category</th>
-        <th>Difficulty</th>
-        <th>Time Limit</th>
-        <th>Total Questions</th>
-        <th>Action</th>
-    </tr>
-
     {% for quiz in quizzes %}
 
-    <tr>
+        <div class="quiz-card">
 
-        <td>{{ quiz.id }}</td>
+            <h2>
+                {{ quiz.title }}
+            </h2>
 
-        <td>{{ quiz.title }}</td>
+            <p>
+                {{ quiz.description }}
+            </p>
 
-        <td>{{ quiz.category.name }}</td>
+            <p>
+                <strong>Category:</strong>
+                {{ quiz.category.name }}
+            </p>
 
-        <td>{{ quiz.difficulty }}</td>
+            <p>
+                <strong>Difficulty:</strong>
+                {{ quiz.difficulty }}
+            </p>
 
-        <td>{{ quiz.time_limit }} min</td>
+            <p>
+                <strong>Time Limit:</strong>
+                {{ quiz.time_limit }} minutes
+            </p>
 
-        <td>{{ quiz.total_questions }}</td>
+            <p>
+                <strong>Questions:</strong>
+                {{ quiz.questions|length }}
+            </p>
 
-        <td>
+            {% if quiz.questions|length > 0 %}
 
-            <a href="{{ url_for('student.start_quiz', quiz_id=quiz.id) }}">
-                Start Quiz
-            </a>
+                <a href="{{ url_for('student.start_quiz', quiz_id=quiz.id) }}">
+                    Start Quiz
+                </a>
 
-        </td>
+            {% else %}
 
-    </tr>
+                <span>
+                    No questions available
+                </span>
+
+            {% endif %}
+
+        </div>
+
+        <hr>
 
     {% endfor %}
 
-</table>
-
 {% else %}
 
-<p>No quizzes are available.</p>
+    <p>No quizzes are currently available.</p>
 
 {% endif %}
 

@@ -1,4 +1,4 @@
-from Online_Quiz_Platform.app import create_app
+from app import create_app
 
 app = create_app()
 

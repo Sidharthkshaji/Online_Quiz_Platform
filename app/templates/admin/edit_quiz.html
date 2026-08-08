@@ -13,40 +13,38 @@ Edit Quiz
     {{ form.hidden_tag() }}
 
     <p>
-        {{ form.title.label }}<br>
-        {{ form.title(size=50) }}
+        {{ form.title.label }}
+        {{ form.title() }}
     </p>
 
     <p>
-        {{ form.description.label }}<br>
-        {{ form.description(rows=5, cols=50) }}
+        {{ form.description.label }}
+        {{ form.description() }}
     </p>
 
     <p>
-        {{ form.category.label }}<br>
+        {{ form.category.label }}
         {{ form.category() }}
     </p>
 
     <p>
-        {{ form.difficulty.label }}<br>
+        {{ form.difficulty.label }}
         {{ form.difficulty() }}
     </p>
 
     <p>
-        {{ form.time_limit.label }}<br>
+        {{ form.time_limit.label }}
         {{ form.time_limit() }}
     </p>
 
     <p>
-        {{ form.submit(value="Update Quiz") }}
+        {{ form.submit() }}
     </p>
 
 </form>
 
-<p>
-    <a href="{{ url_for('admin.quizzes') }}">
-        Back
-    </a>
-</p>
+<a href="{{ url_for('admin.quizzes') }}">
+    Back to Quizzes
+</a>
 
 {% endblock %}

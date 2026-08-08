@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from Online_Quiz_Platform.app.extensions import db
+from app.extensions import db
 
 
 class Quiz(db.Model):

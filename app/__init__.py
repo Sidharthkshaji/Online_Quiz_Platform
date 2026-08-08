@@ -1,12 +1,12 @@
 from flask import Flask
 
-from Online_Quiz_Platform.app.config import Config
-from Online_Quiz_Platform.app.extensions import db, migrate, login_manager
+from app.config import Config
+from app.extensions import db, migrate, login_manager
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    from Online_Quiz_Platform.app.models.user import User
+    from app.models.user import User
     return User.query.get(int(user_id))
 
 
@@ -19,18 +19,18 @@ def create_app():
     migrate.init_app(app, db)
     login_manager.init_app(app)
 
-    from Online_Quiz_Platform.app.models.user import User
-    from Online_Quiz_Platform.app.models.category import Category
-    from Online_Quiz_Platform.app.models.quiz import Quiz
-    from Online_Quiz_Platform.app.models.question import Question
-    from Online_Quiz_Platform.app.models.choice import Choice
-    from Online_Quiz_Platform.app.models.attempt import Attempt
-    from Online_Quiz_Platform.app.models.response import Response
+    from app.models.user import User
+    from app.models.category import Category
+    from app.models.quiz import Quiz
+    from app.models.question import Question
+    from app.models.choice import Choice
+    from app.models.attempt import Attempt
+    from app.models.response import Response
 
-    from Online_Quiz_Platform.app.routes.auth import auth
-    from Online_Quiz_Platform.app.routes.main import main
-    from Online_Quiz_Platform.app.routes.admin import admin
-    from Online_Quiz_Platform.app.routes.student import student
+    from app.routes.auth import auth
+    from app.routes.main import main
+    from app.routes.admin import admin
+    from app.routes.student import student
 
     
 

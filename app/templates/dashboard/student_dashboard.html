@@ -1,0 +1,343 @@
+{% extends "base.html" %}
+
+{% block title %}
+Student Dashboard
+{% endblock %}
+
+{% if active_attempt %}
+
+<div class="unfinished-quiz">
+
+    <h3>
+        ⚠ Unfinished Quiz
+    </h3>
+
+    <p>
+        You have an unfinished quiz:
+    </p>
+
+    <h4>
+        {{ active_attempt.quiz.title }}
+    </h4>
+
+    <p>
+        This quiz has not been submitted yet.
+        You can continue where you left off.
+    </p>
+
+    <a
+        href="{{ url_for(
+            'student.show_question',
+            attempt_id=active_attempt.id,
+            question_number=1
+        ) }}"
+    >
+        Resume Quiz
+    </a>
+
+</div>
+
+{% endif %}
+
+{% block content %}
+
+<div class="dashboard-container">
+
+
+    <div class="student-hero">
+
+        <div>
+
+            <span class="dashboard-label">
+                STUDENT DASHBOARD
+            </span>
+
+            <h1>
+                Welcome back, {{ current_user.name }} 👋
+            </h1>
+
+            <p>
+                Ready to test your knowledge?
+                Choose a quiz and start practicing.
+            </p>
+
+        </div>
+
+
+        <a href="{{ url_for('student.quizzes') }}"
+           class="btn btn-primary">
+
+            Browse Quizzes
+
+        </a>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <span class="stat-icon">
+                📝
+            </span>
+
+            <div>
+
+                <p>Available Quizzes</p>
+
+                <h2>
+                    {{ quiz_count }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-icon">
+                🎯
+            </span>
+
+            <div>
+
+                <p>Attempts</p>
+
+                <h2>
+                    {{ attempt_count }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-icon">
+                📊
+            </span>
+
+            <div>
+
+                <p>Average Score</p>
+
+                <h2>
+                    {{ "%.1f"|format(average_percentage) }}%
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-section">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    Available Quizzes
+                </h2>
+
+                <p>
+                    Choose a quiz and start practicing.
+                </p>
+
+            </div>
+
+
+            <a href="{{ url_for('student.quizzes') }}">
+                View All
+            </a>
+
+        </div>
+
+
+        <div class="student-quiz-grid">
+
+            {% for quiz in available_quizzes %}
+
+                <div class="student-quiz-card">
+
+
+                    <div class="quiz-card-top">
+
+                        <span class="quiz-number">
+                            {{ loop.index }}
+                        </span>
+
+                        <span class="difficulty-badge">
+                            {{ quiz.difficulty }}
+                        </span>
+
+                    </div>
+
+
+                    <h3>
+                        {{ quiz.title }}
+                    </h3>
+
+
+                    <p>
+                        {{ quiz.description or
+                           "Test your knowledge with this quiz." }}
+                    </p>
+
+
+                    <div class="quiz-meta">
+
+                        <span>
+                            ❓ {{ quiz.questions|length }}
+                            Questions
+                        </span>
+
+                        <span>
+                            ⏱ {{ quiz.time_limit }} min
+                        </span>
+
+                    </div>
+
+
+                    <a href="{{ url_for(
+                        'student.start_quiz',
+                        quiz_id=quiz.id
+                    ) }}"
+                       class="quiz-start-button">
+
+                        Start Quiz →
+
+                    </a>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <h3>
+                        No quizzes available
+                    </h3>
+
+                    <p>
+                        Check back later for new quizzes.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-section">
+
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    Recent Attempts
+                </h2>
+
+                <p>
+                    See how you've been performing.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if recent_attempts %}
+
+            <div class="attempt-table">
+
+                <div class="attempt-table-header">
+
+                    <span>No.</span>
+                    <span>Quiz</span>
+                    <span>Score</span>
+                    <span>Percentage</span>
+                    <span>Action</span>
+
+                </div>
+
+
+                {% for attempt in recent_attempts %}
+
+                    <div class="attempt-table-row">
+
+                        <span>
+                            {{ loop.index }}
+                        </span>
+
+                        <span>
+                            {{ attempt.quiz.title }}
+                        </span>
+
+                        <span>
+                            {{ attempt.score }}
+                        </span>
+
+                        <span class="percentage">
+                            {{ "%.1f"|format(
+                                attempt.percentage
+                            ) }}%
+                        </span>
+
+                        <span>
+
+                            <a href="{{ url_for(
+                                'student.review_attempt',
+                                attempt_id=attempt.id
+                            ) }}">
+                                Review
+                            </a>
+
+                        </span>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <h3>
+                    No attempts yet
+                </h3>
+
+                <p>
+                    Take your first quiz to see your results here.
+                </p>
+
+                <a href="{{ url_for('student.quizzes') }}"
+                   class="btn btn-primary">
+
+                    Browse Quizzes
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+</div>
+
+{% endblock %}

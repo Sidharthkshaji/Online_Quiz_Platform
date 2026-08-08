@@ -1,12 +1,15 @@
 from datetime import datetime
 
-from Online_Quiz_Platform.app.extensions import db
+from app.extensions import db
 
 
 class Attempt(db.Model):
     __tablename__ = "attempt"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
     user_id = db.Column(
         db.Integer,
@@ -37,10 +40,15 @@ class Attempt(db.Model):
         nullable=True
     )
 
+    started_at = db.Column(
+        db.DateTime,
+        nullable=True,
+        default=datetime.utcnow
+    )
+
     submitted_at = db.Column(
         db.DateTime,
-        nullable=False,
-        default=datetime.utcnow
+        nullable=True
     )
 
     responses = db.relationship(

@@ -1,17 +1,12 @@
-from Online_Quiz_Platform.app.models.quiz import Quiz
-from Online_Quiz_Platform.app.extensions import db
-from Online_Quiz_Platform.app.models.attempt import Attempt
-from Online_Quiz_Platform.app.models.response import Response
-from Online_Quiz_Platform.app.models.choice import Choice
+from app.models.quiz import Quiz
+
 
 def get_all_quizzes():
     """
-    Returns all quizzes ordered by title.
+    Return all quizzes ordered by ID.
     """
 
-    quizzes = Quiz.query.order_by(Quiz.title).all()
-
-    return quizzes
+    return Quiz.query.order_by(Quiz.id.asc()).all()
 
 def create_attempt(user_id, quiz_id):
     """

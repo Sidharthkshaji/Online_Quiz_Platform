@@ -1,62 +1,235 @@
 {% extends "base.html" %}
 
 {% block title %}
-Take Quiz
+{{ attempt.quiz.title }}
 {% endblock %}
 
 {% block content %}
 
-<h1>{{ attempt.quiz.title }}</h1>
+<div class="quiz-container">
 
-<hr>
+    <div class="quiz-header">
 
-<h3>
-    Question {{ question_number }} of {{ total_questions }}
-</h3>
+        <div>
 
-<p>
-    <strong>{{ question.question_text }}</strong>
-</p>
+            <span class="quiz-label">
+                QUIZ IN PROGRESS
+            </span>
 
-<form method="POST">
+            <h1>
+                {{ attempt.quiz.title }}
+            </h1>
 
-    <div class="quiz-options">
+        </div>
 
-    {% for choice in question.choices %}
+        <div class="question-progress">
 
-    <label class="quiz-option">
+            Question
+            {{ question_number }}
+            of
+            {{ total_questions }}
 
-        <input
-            type="radio"
-            name="choice"
-            value="{{ choice.id }}"
-            id="choice{{ choice.id }}"
-            required>
-
-        <span>{{ choice.choice_text }}</span>
-
-    </label>
-
-    {% endfor %}
+        </div>
 
     </div>
 
-    <br>
 
-    {% if question_number < total_questions %}
+    <!-- TIMER -->
 
-        <button type="submit">
-            Next
-        </button>
+    <div class="quiz-timer">
 
-    {% else %}
+        Time Remaining:
 
-        <button type="submit">
-            Submit Quiz
-        </button>
+        <strong id="timer">
+            --:--
+        </strong>
 
-    {% endif %}
+    </div>
 
-</form>
+
+    <div class="question-card">
+
+        <h2>
+            {{ question.question_text }}
+        </h2>
+
+
+        <form
+            method="POST"
+            id="quiz-form"
+        >
+
+            <div class="quiz-options">
+
+                {% for choice in question.choices %}
+
+                    <label class="quiz-option">
+
+                        <input
+                            type="radio"
+                            name="choice"
+                            value="{{ choice.id }}"
+                            id="choice{{ choice.id }}"
+
+                            {% if selected_choice_id == choice.id %}
+                                checked
+                            {% endif %}
+
+                            required
+                        >
+
+                        <span>
+                            {{ choice.choice_text }}
+                        </span>
+
+                    </label>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- Used only by automatic timer submission -->
+
+            <input
+                type="hidden"
+                name="action"
+                id="timer-action"
+                value=""
+            >
+
+
+            <div class="quiz-navigation">
+
+                {% if question_number > 1 %}
+
+                    <button
+                        type="submit"
+                        name="action"
+                        value="previous"
+                        formnovalidate
+                    >
+                        ← Previous
+                    </button>
+
+                {% endif %}
+
+
+                {% if question_number < total_questions %}
+
+                    <button
+                        type="submit"
+                        name="action"
+                        value="next"
+                    >
+                        Next →
+                    </button>
+
+                {% else %}
+
+                    <button
+                        type="submit"
+                        name="action"
+                        value="submit"
+                    >
+                        Submit Quiz
+                    </button>
+
+                {% endif %}
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    let remainingSeconds =
+        {{ remaining_seconds }};
+
+    const timer =
+        document.getElementById("timer");
+
+    const quizForm =
+        document.getElementById("quiz-form");
+
+    const timerAction =
+        document.getElementById("timer-action");
+
+
+    function updateTimer() {
+
+        if (remainingSeconds <= 0) {
+
+            timer.textContent = "00:00";
+
+            /*
+             * Tell Flask that this is an
+             * automatic timer submission.
+             */
+
+            timerAction.value = "time_expired";
+
+            /*
+             * Disable the normal buttons
+             * to prevent another submission.
+             */
+
+            const buttons =
+                quizForm.querySelectorAll("button");
+
+            buttons.forEach(function(button) {
+                button.disabled = true;
+            });
+
+            quizForm.submit();
+
+            return;
+        }
+
+
+        const minutes =
+            Math.floor(
+                remainingSeconds / 60
+            );
+
+        const seconds =
+            remainingSeconds % 60;
+
+
+        timer.textContent =
+            String(minutes).padStart(2, "0")
+            + ":"
+            + String(seconds).padStart(2, "0");
+
+
+        remainingSeconds--;
+
+    }
+
+
+    updateTimer();
+
+
+    const timerInterval =
+        setInterval(function() {
+
+            if (remainingSeconds <= 0) {
+
+                clearInterval(timerInterval);
+
+                return;
+            }
+
+            updateTimer();
+
+        }, 1000);
+
+
+</script>
 
 {% endblock %}

@@ -6,40 +6,236 @@ Admin Dashboard
 
 {% block content %}
 
-<h1>Admin Dashboard</h1>
+<div class="dashboard-container">
 
-<hr>
+    <div class="dashboard-header">
 
-<h3>Welcome, {{ current_user.name }}!</h3>
+        <div>
 
-<p>
-Email: {{ current_user.email }}
-</p>
+            <span class="dashboard-label">
+                ADMIN DASHBOARD
+            </span>
 
-<hr>
+            <h1>
+                Welcome back, {{ current_user.name }} 👋
+            </h1>
 
-<h2>Administration</h2>
+            <p>
+                Manage quizzes, questions and students from one place.
+            </p>
 
-<ul>
+        </div>
 
-    <li>
+    </div>
 
-        <a href="{{ url_for('admin.categories') }}">
-            Category Management
-        </a>
 
-    </li>
+    <div class="stats-grid">
 
-    <br>
+        <div class="stat-card">
 
-    <li>
+            <span class="stat-icon">📝</span>
 
-        <a href="{{ url_for('admin.quizzes') }}">
-            Quiz Management
-        </a>
+            <div>
+                <p>Quizzes</p>
+                <h2>{{ quiz_count }}</h2>
+            </div>
 
-    </li>
+        </div>
 
-</ul>
+
+        <div class="stat-card">
+
+            <span class="stat-icon">❓</span>
+
+            <div>
+                <p>Questions</p>
+                <h2>{{ question_count }}</h2>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-icon">👥</span>
+
+            <div>
+                <p>Students</p>
+                <h2>{{ student_count }}</h2>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-icon">📚</span>
+
+            <div>
+                <p>Categories</p>
+                <h2>{{ category_count }}</h2>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-section">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    Quick Actions
+                </h2>
+
+                <p>
+                    Common administration tasks
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="action-grid">
+
+            <a href="{{ url_for('admin.create_quiz_route') }}"
+               class="action-card">
+
+                <span>➕</span>
+
+                <div>
+                    <h3>Create Quiz</h3>
+                    <p>Create a new quiz.</p>
+                </div>
+
+            </a>
+
+
+            <a href="{{ url_for('admin.quizzes') }}"
+               class="action-card">
+
+                <span>📝</span>
+
+                <div>
+                    <h3>Manage Quizzes</h3>
+                    <p>Edit quizzes and questions.</p>
+                </div>
+
+            </a>
+
+
+            <a href="{{ url_for('admin.categories') }}"
+               class="action-card">
+
+                <span>📚</span>
+
+                <div>
+                    <h3>Categories</h3>
+                    <p>Manage quiz categories.</p>
+                </div>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-section">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    Recent Quizzes
+                </h2>
+
+                <p>
+                    Recently created quizzes
+                </p>
+
+            </div>
+
+            <a href="{{ url_for('admin.quizzes') }}">
+                View All
+            </a>
+
+        </div>
+
+
+        {% if recent_quizzes %}
+
+            <div class="quiz-table">
+
+                <div class="quiz-table-header">
+
+                    <span>No.</span>
+                    <span>Quiz</span>
+                    <span>Category</span>
+                    <span>Difficulty</span>
+                    <span>Questions</span>
+
+                </div>
+
+
+                {% for quiz in recent_quizzes %}
+
+                    <div class="quiz-table-row">
+
+                        <span>
+                            {{ loop.index }}
+                        </span>
+
+                        <span class="quiz-name">
+                            {{ quiz.title }}
+                        </span>
+
+                        <span>
+                            {{ quiz.category.name }}
+                        </span>
+
+                        <span>
+                            {{ quiz.difficulty }}
+                        </span>
+
+                        <span>
+                            {{ quiz.questions|length }}
+                        </span>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <h3>
+                    No quizzes yet
+                </h3>
+
+                <p>
+                    Create your first quiz to get started.
+                </p>
+
+                <a href="{{ url_for('admin.create_quiz_route') }}"
+                   class="btn btn-primary">
+                    Create Quiz
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
 
 {% endblock %}

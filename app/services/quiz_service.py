@@ -1,13 +1,13 @@
-from Online_Quiz_Platform.app.extensions import db
-from Online_Quiz_Platform.app.models.quiz import Quiz
-from Online_Quiz_Platform.app.models.category import Category
+from app.extensions import db
+from app.models.quiz import Quiz
+from app.models.category import Category
 
 
 def get_all_quizzes():
     """
     Return all quizzes ordered by title.
     """
-    return Quiz.query.order_by(Quiz.title).all()
+    return Quiz.query.order_by(Quiz.id.asc()).all()
 
 
 def get_quiz_by_id(quiz_id):

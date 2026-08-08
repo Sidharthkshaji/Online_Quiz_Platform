@@ -42,7 +42,7 @@ Quiz Management
 
     <tr>
 
-        <td>{{ quiz.id }}</td>
+        <td>{{ loop.index }}</td>
 
         <td>{{ quiz.title }}</td>
 
@@ -67,7 +67,10 @@ Quiz Management
             </a>
 
             |
-
+            <a href="{{ url_for('admin.view_quiz', quiz_id=quiz.id) }}">
+                View
+            </a>
+            |
             <form
                 action="{{ url_for('admin.delete_quiz_route', quiz_id=quiz.id) }}"
                 method="POST"

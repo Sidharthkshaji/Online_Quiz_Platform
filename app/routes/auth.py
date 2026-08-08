@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
-from Online_Quiz_Platform.app.forms.login_form import LoginForm
-from Online_Quiz_Platform.app.models.user import User
-from Online_Quiz_Platform.app.forms.register_form import RegistrationForm
-from Online_Quiz_Platform.app.extensions import db
+from app.forms.login_form import LoginForm
+from app.models.user import User
+from app.forms.register_form import RegistrationForm
+from app.extensions import db
 
 auth = Blueprint("auth", __name__)
 

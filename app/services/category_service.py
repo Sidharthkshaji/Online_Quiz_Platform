@@ -1,12 +1,12 @@
-from Online_Quiz_Platform.app.extensions import db
-from Online_Quiz_Platform.app.models.category import Category
+from app.extensions import db
+from app.models.category import Category
 
 
 def get_all_categories():
     """
     Return all categories ordered alphabetically.
     """
-    return Category.query.order_by(Category.name).all()
+    return Category.query.order_by(Category.id.asc()).all()
 
 
 def get_category_by_id(category_id):

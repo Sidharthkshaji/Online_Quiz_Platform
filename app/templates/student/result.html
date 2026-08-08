@@ -6,13 +6,7 @@ Quiz Result
 
 {% block content %}
 
-<h1>Quiz Completed</h1>
-
-<hr>
-
-<h2>{{ attempt.quiz.title }}</h2>
-
-<br>
+<h1>Quiz Result</h1>
 
 <p>
     <strong>Score:</strong>
@@ -26,12 +20,14 @@ Quiz Result
 
 <br>
 
-<p>
+<a href="{{ url_for('student.review_attempt', attempt_id=attempt.id) }}">
+    Review Answers
+</a>
 
-    <a href="{{ url_for('student.quizzes') }}">
-        Back to Available Quizzes
-    </a>
+<br><br>
 
-</p>
+<a href="{{ url_for('student.quizzes') }}">
+    Back to Available Quizzes
+</a>
 
 {% endblock %}
