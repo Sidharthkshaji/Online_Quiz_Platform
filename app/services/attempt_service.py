@@ -59,19 +59,15 @@ def get_active_attempt(user_id):
 def calculate_score(attempt):
     """
     Calculate score and percentage.
+    Total marks is based on ALL questions in the quiz, not just answered ones.
     """
 
     score = 0
-    total_marks = 0
+    total_marks = sum(q.marks for q in attempt.quiz.questions)
 
     for response in attempt.responses:
-
-        question = response.question
-
-        total_marks += question.marks
-
-        if response.selected_choice.is_correct:
-            score += question.marks
+        if response.selected_choice and response.selected_choice.is_correct:
+            score += response.question.marks
 
     percentage = 0
 

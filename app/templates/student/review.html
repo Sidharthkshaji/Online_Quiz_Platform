@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block title %}
-Review Answers
+Review Answers - {{ attempt.quiz.title }}
 {% endblock %}
 
 {% block content %}
 
-<h1>Review Answers</h1>
+<h1>Review Answers: {{ attempt.quiz.title }}</h1>
 
 <p>
     <strong>Score:</strong>
@@ -20,45 +20,58 @@ Review Answers
 
 <hr>
 
-{% for response in attempt.responses %}
+{% for question in attempt.quiz.questions %}
+
+    {% set ns = namespace(user_response=None) %}
+    {% for resp in attempt.responses %}
+        {% if resp.question_id == question.id %}
+            {% set ns.user_response = resp %}
+        {% endif %}
+    {% endfor %}
 
     <h3>
-        Question {{ loop.index }}
+        Question {{ loop.index }} ({{ question.marks }} {% if question.marks == 1 %}mark{% else %}marks{% endif %})
     </h3>
 
     <p>
-        <strong>{{ response.question.question_text }}</strong>
+        <strong>{{ question.question_text }}</strong>
     </p>
 
-    <p>
-        <strong>Your Answer:</strong>
-        {{ response.selected_choice.choice_text }}
-    </p>
-
-    {% if response.selected_choice.is_correct %}
-
+    {% if ns.user_response %}
         <p>
-            ✅ <strong>Correct</strong>
+            <strong>Your Answer:</strong>
+            {{ ns.user_response.selected_choice.choice_text }}
         </p>
 
+        {% if ns.user_response.selected_choice.is_correct %}
+            <p>
+                ✅ <strong>Correct</strong>
+            </p>
+        {% else %}
+            <p>
+                ❌ <strong>Wrong</strong>
+            </p>
+            <p>
+                <strong>Correct Answer:</strong>
+                {% for choice in question.choices %}
+                    {% if choice.is_correct %}
+                        {{ choice.choice_text }}
+                    {% endif %}
+                {% endfor %}
+            </p>
+        {% endif %}
     {% else %}
-
         <p>
-            ❌ <strong>Wrong</strong>
+            ⚠️ <strong>Not Answered</strong>
         </p>
-
         <p>
             <strong>Correct Answer:</strong>
-
-            {% for choice in response.question.choices %}
-
+            {% for choice in question.choices %}
                 {% if choice.is_correct %}
                     {{ choice.choice_text }}
                 {% endif %}
-
             {% endfor %}
         </p>
-
     {% endif %}
 
     <hr>

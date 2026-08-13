@@ -32,12 +32,12 @@ def create_app():
     from app.routes.admin import admin
     from app.routes.student import student
 
-    
+    with app.app_context():
+        db.create_all()
 
     app.register_blueprint(auth)
     app.register_blueprint(main)
     app.register_blueprint(admin)
     app.register_blueprint(student)
-
 
     return app
