@@ -8,8 +8,10 @@ class User(UserMixin, db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
+    username = db.Column(db.String(50), unique=True, nullable=False, index=True)
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(255), nullable=False)
+    profile_photo = db.Column(db.String(255), nullable=True, default=None)
     role = db.Column(db.String(20), nullable=False, default="student")
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 

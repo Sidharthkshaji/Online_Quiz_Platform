@@ -7,7 +7,10 @@ from app.extensions import db, migrate, login_manager
 @login_manager.user_loader
 def load_user(user_id):
     from app.models.user import User
-    return User.query.get(int(user_id))
+    try:
+        return db.session.get(User, int(user_id))
+    except (ValueError, TypeError):
+        return None
 
 
 def create_app():

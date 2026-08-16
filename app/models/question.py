@@ -42,7 +42,8 @@ class Question(db.Model):
         "Choice",
         back_populates="question",
         cascade="all, delete-orphan",
-        lazy=True
+        lazy=True,
+        order_by="Choice.id"
     )
 
     responses = db.relationship(

@@ -1,0 +1,540 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="profile-page">
+
+    <div class="profile-header">
+        <div>
+            <span class="page-eyebrow">
+                ACCOUNT
+            </span>
+
+            <h1>My Profile</h1>
+
+            <p>
+                Manage your personal information and account settings.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="profile-grid">
+
+        <!-- PROFILE SUMMARY -->
+
+        <section class="profile-card profile-summary">
+
+            <div class="profile-avatar-large">
+
+                {% if user.profile_photo %}
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename=user.profile_photo
+                        ) }}"
+                        alt="{{ user.name }}"
+                        class="avatar-image-large"
+                    >
+
+                {% else %}
+
+                    <div class="avatar-placeholder-large">
+                        {{ user.name[0].upper() }}
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <h2>
+                {{ user.name }}
+            </h2>
+
+            <p class="profile-username">
+                @{{ user.username }}
+            </p>
+
+            {% if user.is_admin %}
+
+                <span class="badge badge-admin">
+                    Administrator
+                </span>
+
+            {% else %}
+
+                <span class="badge badge-student">
+                    Student
+                </span>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- ACCOUNT INFORMATION -->
+
+        <section class="profile-card">
+
+            <div class="card-heading">
+
+                <div>
+                    <span class="page-eyebrow">
+                        ACCOUNT INFORMATION
+                    </span>
+
+                    <h2>Personal Details</h2>
+                </div>
+
+            </div>
+
+
+            <div class="profile-details">
+
+                <div class="profile-detail">
+                    <span>Full Name</span>
+                    <strong>
+                        {{ user.name }}
+                    </strong>
+                </div>
+
+                <div class="profile-detail">
+                    <span>Username</span>
+                    <strong>
+                        @{{ user.username }}
+                    </strong>
+                </div>
+
+                <div class="profile-detail">
+                    <span>Email</span>
+                    <strong>
+                        {{ user.email }}
+                    </strong>
+                </div>
+
+                <div class="profile-detail">
+                    <span>Member Since</span>
+                    <strong>
+                        {{ user.created_at.strftime('%B %d, %Y') }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <div class="profile-edit-trigger">
+
+        <button
+            type="button"
+            class="btn btn-primary"
+            id="editProfileBtn"
+        >
+            Edit Profile
+        </button>
+
+    </div>
+
+    <!-- EDIT PROFILE -->
+
+    <section
+        class="profile-card profile-edit-card"
+        id="editProfileSection"
+        {% if not form.errors %}hidden{% endif %}
+    >
+
+        <div class="card-heading">
+
+            <div>
+                <span class="page-eyebrow">
+                    SETTINGS
+                </span>
+
+                <h2>Edit Profile</h2>
+
+                <p>
+                    Update your name, username, profile photo or password.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+            class="profile-form"
+            novalidate
+        >
+
+            {{ form.hidden_tag() }}
+
+
+            <!-- PROFILE PHOTO -->
+
+            <div class="profile-photo-editor">
+
+                <div class="photo-preview" id="photoPreview">
+
+                    {% if user.profile_photo %}
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename=user.profile_photo
+                            ) }}"
+                            alt="{{ user.name }}"
+                            class="avatar-image-editor"
+                        >
+
+                    {% else %}
+
+                        <div class="avatar-placeholder-editor">
+                            {{ user.name[0].upper() }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="photo-editor-content">
+
+                    <label
+                        for="profile_photo"
+                        class="form-label"
+                    >
+                        Profile Photo
+                    </label>
+
+                    {{ form.profile_photo(
+                        id="profile_photo",
+                        accept=".jpg,.jpeg,.png,.webp,image/*",
+                        class="form-control"
+                    ) }}
+
+                    <p class="form-help">
+                        Your image will be automatically cropped
+                        to a square avatar. Maximum size: 5 MB.
+                    </p>
+
+                    {% if form.profile_photo.errors %}
+
+                        <div class="field-error">
+                            {% for error in form.profile_photo.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- FULL NAME -->
+
+            <div class="form-group">
+
+                {{ form.name.label(class="form-label") }}
+
+                {{ form.name(
+                    class="form-control",
+                    placeholder="Your full name"
+                ) }}
+
+                {% if form.name.errors %}
+
+                    <div class="field-error">
+                        {% for error in form.name.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- USERNAME -->
+
+            <div class="form-group">
+
+                {{ form.username.label(class="form-label") }}
+
+                {{ form.username(
+                    class="form-control",
+                    placeholder="your_username",
+                    autocomplete="username"
+                ) }}
+
+                <p class="form-help">
+                    3–50 characters. Use letters, numbers,
+                    dots or underscores.
+                </p>
+
+                {% if form.username.errors %}
+
+                    <div class="field-error">
+                        {% for error in form.username.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    class="form-control"
+                    value="{{ user.email }}"
+                    disabled
+                >
+
+                <p class="form-help">
+                    Email cannot be changed from this page.
+                </p>
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="password-section">
+
+                <h3>
+                    Change Password
+                </h3>
+
+                <p class="form-help">
+                    Leave these fields empty if you don't
+                    want to change your password.
+                </p>
+
+
+                <div class="form-group">
+
+                    {{ form.current_password.label(
+                        class="form-label"
+                    ) }}
+
+                    {{ form.current_password(
+                        class="form-control",
+                        placeholder="Current password"
+                    ) }}
+
+                    {% if form.current_password.errors %}
+
+                        <div class="field-error">
+                            {% for error in form.current_password.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="form-group">
+
+                    {{ form.new_password.label(
+                        class="form-label"
+                    ) }}
+
+                    {{ form.new_password(
+                        class="form-control",
+                        placeholder="New password"
+                    ) }}
+
+                    {% if form.new_password.errors %}
+
+                        <div class="field-error">
+                            {% for error in form.new_password.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="form-group">
+
+                    {{ form.confirm_password.label(
+                        class="form-label"
+                    ) }}
+
+                    {{ form.confirm_password(
+                        class="form-control",
+                        placeholder="Confirm new password"
+                    ) }}
+
+                    {% if form.confirm_password.errors %}
+
+                        <div class="field-error">
+                            {% for error in form.confirm_password.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="cancelEditBtn"
+                >
+                    Cancel
+                </button>
+
+                {{ form.submit(
+                    class="btn btn-primary"
+                ) }}
+
+            </div>
+
+        </form>
+
+    </section>
+
+<script>
+
+const photoInput =
+    document.getElementById("profile_photo");
+
+const photoPreview =
+    document.getElementById("photoPreview");
+
+
+if (photoInput) {
+
+    photoInput.addEventListener(
+        "change",
+        function(event) {
+
+            const file =
+                event.target.files[0];
+
+            if (!file) {
+                return;
+            }
+
+            if (
+                !file.type.startsWith("image/")
+            ) {
+
+                return;
+
+            }
+
+            const reader =
+                new FileReader();
+
+            reader.onload =
+                function(e) {
+
+                    photoPreview.innerHTML = `
+                        <img
+                            src="${e.target.result}"
+                            alt="Profile preview"
+                            class="avatar-image-editor"
+                        >
+                    `;
+
+                };
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
+}
+
+</script>
+<script>
+
+const editProfileBtn =
+    document.getElementById("editProfileBtn");
+
+const cancelEditBtn =
+    document.getElementById("cancelEditBtn");
+
+const editProfileSection =
+    document.getElementById("editProfileSection");
+
+
+editProfileBtn.addEventListener(
+    "click",
+    function () {
+
+        editProfileSection.hidden = false;
+
+        editProfileBtn.style.display = "none";
+
+        editProfileSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    }
+);
+
+
+cancelEditBtn.addEventListener(
+    "click",
+    function () {
+
+        editProfileSection.hidden = true;
+
+        editProfileBtn.style.display = "inline-flex";
+
+    }
+);
+
+
+/*
+ * If validation fails after submitting,
+ * keep the edit section open.
+ */
+
+{% if form.errors %}
+
+    editProfileSection.hidden = false;
+
+    editProfileBtn.style.display = "none";
+
+{% endif %}
+
+</script>
+
+{% endblock %}

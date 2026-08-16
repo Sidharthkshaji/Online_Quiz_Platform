@@ -3,7 +3,8 @@ from pathlib import Path
 from urllib.parse import quote_plus
 from dotenv import load_dotenv
 
-load_dotenv()
+project_root = Path(__file__).resolve().parent.parent
+load_dotenv(dotenv_path=project_root / ".env")
 
 
 class Config:
@@ -25,3 +26,4 @@ class Config:
         SQLALCHEMY_DATABASE_URI = f"sqlite:///{sqlite_path}"
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    MAX_CONTENT_LENGTH = 5 * 1024 * 1024
